@@ -3,31 +3,30 @@
 package com.cg.rest.pojo;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
-import org.springframework.data.annotation.Id;
 
 @Entity
 public class Employee {
 	
 	@Id
-	private String empId;
-	
+	private int empId;
 	private String empName;
 
 	public Employee() {
 	}
 
-	public Employee(String empId, String empName) {
+	public Employee(int empId, String empName) {
 		super();
 		this.empId = empId;
 		this.empName = empName;
 	}
 
-	public String getEmpId() {
+	public int getEmpId() {
 		return empId;
 	}
 
-	public void setEmpId(String empId) {
+	public void setEmpId(int empId) {
 		this.empId = empId;
 	}
 

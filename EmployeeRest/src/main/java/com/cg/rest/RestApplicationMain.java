@@ -31,11 +31,18 @@ public class RestApplicationMain {
 	@Bean
 	public CommandLineRunner loadData(EmployeeService service) {
 		return (args) -> {
-			service.addNewEmployee(new Employee("1001", "Udit"));
-			service.addNewEmployee(new Employee("1002", "Alok"));
-			service.addNewEmployee(new Employee("1003", "Rahul"));
-			service.addNewEmployee(new Employee("1004", "Ripu"));
-
+			
+			service.addNewEmployee(new Employee(1, "Udit"));
+			service.addNewEmployee(new Employee(2, "Alok"));
+			service.addNewEmployee(new Employee(3, "Rahul"));
+			service.addNewEmployee(new Employee(4, "Ripu"));
+			service.addNewEmployee(new Employee(5, "Shubham"));
+			service.addNewEmployee(new Employee(6, "Naman"));
+			service.addNewEmployee(new Employee(7, "Shaurya"));
+			service.addNewEmployee(new Employee(8, "Deep"));
+			service.addNewEmployee(new Employee(9, "Jatin"));
+			
+			System.out.println("Main method called");
 		};
 
 	}

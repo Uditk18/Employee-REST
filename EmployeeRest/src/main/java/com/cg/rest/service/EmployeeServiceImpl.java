@@ -23,17 +23,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 		repo.save(employee);
 	}
 
-	public void deleteEmployee(String id) {
-		repo.deleteById(id);
-	}
-
-	public Employee getEmployeeById(String id) {
+	
+	public Employee getEmployeeById(int id) {
 		return repo.findById(id).get();
 	}
 
 	@Override
-	public void updateEmployee(Employee employee, String id) {
+	public void updateEmployee(Employee employee, int id) {
 		repo.save(employee);
 	}
+
+	@Override
+	public void deleteEmployee(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

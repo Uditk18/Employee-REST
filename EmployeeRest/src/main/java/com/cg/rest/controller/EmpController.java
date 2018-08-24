@@ -7,8 +7,9 @@ import java.util.ArrayList;
 //Rest controller which handles all the dependencies and use annotations to perform actions
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,8 @@ import com.cg.rest.service.EmployeeServiceImpl;
 @RestController
 public class EmpController {
 
-	private EmployeeService empService = new EmployeeServiceImpl();
+	@Autowired
+	private EmployeeService empService;
 
 	/*
 	 * @RequestMapping It maps HTTP Requests to handler methods of MVC and REST
@@ -54,10 +56,16 @@ public class EmpController {
 	 * @PathVariable tells that we are passing a variable in the url
 	 */
 	@RequestMapping(value = "/employee/{id}", method = RequestMethod.GET)
-	public Employee getEmployeeById(@PathVariable String id) {
-		return null;
-//		Resource<Employee> resource=new Resource<Employee>(empService.getEmployeeById(id));
-//			return resource;
+	public Resource getEmployeeById(@PathVariable int id) {
+
+		List<Employee> tempEmployees = empService.viewAllEmployees();
+
+		Link viewAll = linkTo(methodOn(this.getClass()).getEmployeeByPage(1, 9)).withRel("viewAll");
+
+		Resource resource = new Resource(empService.getEmployeeById(id), viewAll);
+
+		return resource;
+
 	}
 
 	// DELETE Method to delete an employee
@@ -67,35 +75,36 @@ public class EmpController {
 	 */
 
 	@RequestMapping(value = "/employee/{id}", method = RequestMethod.DELETE)
-	public void deleteEmployee(@PathVariable String id) {
+	public void deleteEmployee(@PathVariable int id) {
 		empService.deleteEmployee(id);
 	}
 
 	@RequestMapping(value = "/employee/{id}", method = RequestMethod.PUT)
-	public void updateEmployee(@RequestBody Employee employee, @PathVariable String id) {
+	public void updateEmployee(@RequestBody Employee employee, @PathVariable int id) {
 		empService.updateEmployee(employee, id);
 	}
 
 	@RequestMapping(value = "/employee/{start}/{count}", method = RequestMethod.GET)
-	public Resources getEmployeeByPage(@PathVariable int start,@PathVariable int count) {
-		//Temporary list having all the employees
-		List<Employee> tempEmployees=empService.viewAllEmployees();
-		//Finals list storing final answers
-		List<Employee> employees= new ArrayList<>();
-		
-		//Adding data to new arraylist between start and count from employee list temp
-		for(int i=start;i<(start+count);i++)
-		{
-			employees.add(tempEmployees.get(i-1));
+	public Resources getEmployeeByPage(@PathVariable int start, @PathVariable int count) {
+		// Temporary list having all the employees
+		List<Employee> tempEmployees = empService.viewAllEmployees();
+		// Finals list storing final answers
+		List<Employee> employees = new ArrayList<>();
+
+		// Adding data to new arraylist between start and count from employee list temp
+		for (int i = start; i < (start + count); i++) {
+			employees.add(tempEmployees.get(i - 1));
 		}
-		
-		//Now we have to add links to navigate to next 2 employee data
-		Link nextLink= linkTo(methodOn(this.getClass()).getEmployeeByPage(start+count,count)).withRel("nextLink");
-		Link prevLink= linkTo(methodOn(this.getClass()).getEmployeeByPage(start-count>0?start-count:1, count)).withRel("prevLink");
-		Resources resources=new Resources(employees, nextLink, prevLink); 
-		
+
+		// Now we have to add links to navigate to next 2 employee data
+		Link nextLink = linkTo(methodOn(this.getClass()).getEmployeeByPage(start + count, count)).withRel("nextLink");
+		Link prevLink = linkTo(
+				methodOn(this.getClass()).getEmployeeByPage(start - count > 0 ? start - count : 1, count))
+						.withRel("prevLink");
+		Resources resources = new Resources(employees, nextLink, prevLink);
+
 		return resources;
-		
+
 	}
 
 }
